@@ -1,0 +1,20 @@
+-- USE orders;
+-- SELECT MAX(o_date), MIN(o_date) FROM orders_20190822;
+-- SELECT count(id_o) FROM orders_20190822;
+-- SELECT count(DISTINCT id_o) FROM orders_20190822;
+-- SELECT count(DISTINCT user_id) FROM orders_20190822;
+-- SELECT COUNT(id_o), o_date FROM orders_20190822 GROUP BY YEAR(o_date);
+-- SELECT SUM(price) FROM orders_20190822 GROUP BY YEAR(o_date);
+-- SELECT COUNT(id_o) FROM orders_20190822 GROUP BY YEAR(o_date);
+-- SELECT count(DISTINCT user_id) FROM orders_20190822 GROUP BY YEAR(o_date);
+-- SELECT COUNT(id_o), user_id FROM orders_20190822 GROUP BY user_id ORDER BY COUNT(id_o) DESC;
+-- SELECT SUM(price) FROM orders_20190822;
+-- SELECT SUM(price) FROM orders_20190822 WHERE user_id IN (765861, 39506, 221047, 186744, 53832, 154900);
+-- SELECT MAX(price), MIN(price) FROM orders_20190822;
+
+-- SELECT count(DISTINCT user_id) FROM orders_20190822 
+-- WHERE YEAR(o_date)=2016 AND NOT user_id IN (SELECT user_id FROM orders_20190822 WHERE YEAR(o_date)=2017);
+-- SELECT price FROM orders_20190822 WHERE price<0 OR price>200000;
+
+SELECT SUM(price), YEAR(o_date) FROM orders_20190822 
+WHERE YEAR(o_date)=2016 AND NOT user_id IN (SELECT user_id FROM orders_20190822 WHERE YEAR(o_date)=2017);
