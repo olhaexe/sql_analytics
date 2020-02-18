@@ -1,0 +1,28 @@
+-- представление с нужными данными для группировки:
+CREATE OR REPLACE VIEW users_orders AS
+  (SELECT user_id id, MAX(o_date) d, COUNT(id_o) n, SUM(price) s FROM orders_20190822 GROUP BY user_id);
+ 
+
+-- присвоить индексы:
+CREATE OR REPLACE VIEW rfm_orders AS
+(SELECT id, s,
+  CASE WHEN TIMESTAMPDIFF(DAY,d,date('2018-01-01')) <= 121 THEN "3"
+       WHEN TIMESTAMPDIFF(DAY,d,date('2018-01-01')) > 121 AND TIMESTAMPDIFF(DAY,d,date('2018-01-01')) <= 374 THEN "2"
+  ELSE "1" end  AS r,
+  CASE WHEN n <= 1 THEN "1"
+       WHEN n > 1 AND n <= 3 THEN "2"
+  ELSE "3" end  AS f,
+  CASE WHEN s < 1181 THEN "1"
+       WHEN s >= 1181 AND s < 2895 THEN "2"
+  ELSE "3" end  AS m
+  FROM users_orders);
+
+-- группа VIP:
+SELECT COUNT(id), SUM(s) FROM rfm_orders WHERE r>=2 AND f=3 AND m=3;
+-- Видим, что 7,68% VIP-пользователей делают 38,88% выручки.
+
+-- группа Lost:
+SELECT COUNT(id), SUM(s) FROM rfm_orders WHERE r=1;
+
+-- группа Regular:
+SELECT COUNT(id), SUM(s) FROM rfm_orders WHERE r>1 AND (f<3 OR m<3);
